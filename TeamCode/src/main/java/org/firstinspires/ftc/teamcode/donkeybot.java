@@ -1,24 +1,34 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.view.View;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 public class donkeybot {
@@ -27,6 +37,8 @@ public class donkeybot {
     public DcMotor rearLeft;
     public DcMotor rearRight;
     public DcMotor frontRight;
+
+    private ElapsedTime     runtime = new ElapsedTime();
 
     BNO055IMU imu;
     Orientation angles;
@@ -84,10 +96,10 @@ public class donkeybot {
     }
 
 
-/*
+
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
-                             double timeoutS, LinearOpMode opmode) {
+                             double timeoutS, LinearOpMode opmode) throws InterruptedException {
         int newFrontLeftTarget;
         int newFrontRightTarget;
         int newRearLeftTarget;
@@ -100,7 +112,7 @@ public class donkeybot {
         initRunWithEncoder();
 
         // Send telemetry message to indicate successful Encoder reset
-        opmode.telemetry.addData("Path0",  "Starting at %7d :%7d",
+        opmode.telemetry.addData("Path0", "Starting at %7d :%7d",
                 frontLeft.getCurrentPosition(),
                 frontRight.getCurrentPosition(),
                 rearLeft.getCurrentPosition(),
@@ -111,10 +123,10 @@ public class donkeybot {
         if (opmode.opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newFrontLeftTarget = (frontLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH));
-            newFrontRightTarget = (frontRight.getCurrentPosition() - (int)(rightInches * COUNTS_PER_INCH));
-            newRearLeftTarget = -(rearLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH));
-            newRearRightTarget = -(rearRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH));
+            newFrontLeftTarget = (frontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH));
+            newFrontRightTarget = (frontRight.getCurrentPosition() - (int) (rightInches * COUNTS_PER_INCH));
+            newRearLeftTarget = -(rearLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH));
+            newRearRightTarget = -(rearRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH));
 
             frontLeft.setTargetPosition(newFrontLeftTarget);
             frontRight.setTargetPosition(newFrontRightTarget);
@@ -145,8 +157,8 @@ public class donkeybot {
                     (frontLeft.isBusy() && frontRight.isBusy() && rearLeft.isBusy() && rearRight.isBusy())) {
 
                 // Display it for the driver.
-                opmode.telemetry.addData("Path1",  "Running to %7d :%7d : %d : %d", newFrontLeftTarget,  newFrontRightTarget, newRearLeftTarget, newRearRightTarget);
-                opmode.telemetry.addData("Path2",  "Running at %7d :%7d : %7d : %7d",
+                opmode.telemetry.addData("Path1", "Running to %7d :%7d : %d : %d", newFrontLeftTarget, newFrontRightTarget, newRearLeftTarget, newRearRightTarget);
+                opmode.telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d",
                         frontLeft.getCurrentPosition(),
                         frontRight.getCurrentPosition(),
                         rearLeft.getCurrentPosition(),
@@ -165,7 +177,41 @@ public class donkeybot {
             // Turn off RUN_TO_POSITION
 
         }
-*/
+    }
+
+        public void initRunWithEncoder()
+        {
+            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rearLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rearRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+            frontLeft.setDirection(DcMotor.Direction.REVERSE);
+            frontRight.setDirection(DcMotor.Direction.REVERSE);
+            rearRight.setDirection(DcMotor.Direction.FORWARD);
+            rearLeft.setDirection(DcMotor.Direction.FORWARD);
+
+            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRight.setDirection(DcMotor.Direction.REVERSE);
+            rearLeft.setDirection(DcMotor.Direction.REVERSE);
+        }
+
+        public void initRunWithoutEncoder ()
+        {
+            frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rearLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rearRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            frontLeft.setDirection(DcMotor.Direction.REVERSE);
+            frontRight.setDirection(DcMotor.Direction.FORWARD);
+            rearRight.setDirection(DcMotor.Direction.REVERSE);
+            rearLeft.setDirection(DcMotor.Direction.FORWARD);
+        }
 
     public void driveForwardTime(double speed,long time) throws InterruptedException {
         frontLeft.setPower(speed);
@@ -177,7 +223,8 @@ public class donkeybot {
     }
 
 
-    public void driveForward(double speed) throws InterruptedException {
+
+    public void driveForward(double speed)  {
         frontLeft.setPower(speed);
         frontRight.setPower(speed);
         rearLeft.setPower(speed);

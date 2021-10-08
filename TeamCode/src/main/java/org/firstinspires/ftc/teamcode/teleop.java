@@ -24,10 +24,10 @@ public class teleop extends LinearOpMode{
 
         while (opModeIsActive()){
 
-           robot.rearLeft.setPower(gamepad1.right_stick_y);
-          robot.frontLeft.setPower(gamepad1.right_stick_y);
-           robot.frontRight.setPower(gamepad1.left_stick_y);
-           robot.rearRight.setPower(gamepad1.left_stick_y);
+            robot.rearLeft.setPower(gamepad1.right_stick_y);
+            robot.frontLeft.setPower(gamepad1.right_stick_y);
+            robot.frontRight.setPower(gamepad1.left_stick_y);
+            robot.rearRight.setPower(gamepad1.left_stick_y);
 /*
            // Color.RGBToHSV(robot.sensorColor.red()*255, robot.sensorColor.green()*255,robot.sensorColor.blue()*255,hsvValues);
 
