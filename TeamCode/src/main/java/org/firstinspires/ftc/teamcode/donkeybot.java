@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -44,15 +45,14 @@ public class donkeybot {
     Orientation angles;
 
     static final double     SCALE_FACTOR = 75.0/75.0; //  if drive speed = .2 or .3 use 75.0/75.0;  .5 is 75.0/76.0 .4 is 75.0/75.5 if drive_speed = .1, use 1.0; if drive_speed = .3, use 75.0/77.0 note that .3 has hard time braking
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 0.5 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_MOTOR_REV    = 537.6 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 3.77953 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (SCALE_FACTOR * COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.3;
 
-    private CRServo servo;
-
+    public CRServo arm;
 
    // public ColorSensor sensorColor;
     public DigitalChannel sensorTouch;
@@ -73,7 +73,7 @@ public class donkeybot {
         frontRight = hwMap.dcMotor.get("frontRight");
         rearRight = hwMap.dcMotor.get("rearRight");
 
-        servo = hwMap.crservo.get("servo");
+        arm = hwMap.crservo.get("arm");
 
         //sensorColor = hwMap.get(ColorSensor.class,"colorSensor");
         sensorTouch = hwMap.get(DigitalChannel.class,"touchSensor");
@@ -189,7 +189,7 @@ public class donkeybot {
 
             frontLeft.setDirection(DcMotor.Direction.REVERSE);
             frontRight.setDirection(DcMotor.Direction.REVERSE);
-            rearRight.setDirection(DcMotor.Direction.FORWARD);
+            rearRight.setDirection(DcMotor.Direction.REVERSE);
             rearLeft.setDirection(DcMotor.Direction.FORWARD);
 
             frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -197,7 +197,7 @@ public class donkeybot {
             rearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontRight.setDirection(DcMotor.Direction.REVERSE);
-            rearLeft.setDirection(DcMotor.Direction.REVERSE);
+            rearLeft.setDirection(DcMotor.Direction.FORWARD);
         }
 
         public void initRunWithoutEncoder ()
@@ -208,8 +208,8 @@ public class donkeybot {
             rearRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             frontLeft.setDirection(DcMotor.Direction.REVERSE);
-            frontRight.setDirection(DcMotor.Direction.FORWARD);
-            rearRight.setDirection(DcMotor.Direction.REVERSE);
+            frontRight.setDirection(DcMotor.Direction.REVERSE);
+            rearRight.setDirection(DcMotor.Direction.FORWARD);
             rearLeft.setDirection(DcMotor.Direction.FORWARD);
         }
 
@@ -286,10 +286,10 @@ public class donkeybot {
 
         angles=imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         Thread.sleep(500);
-        frontLeft.setPower(-speed);
+        frontLeft.setPower(speed);
         frontRight.setPower(speed);
         rearLeft.setPower(-speed);
-        rearRight.setPower(speed);
+        rearRight.setPower(-speed);
         while (angles.firstAngle < angleReading && !opmode.isStopRequested()){
             angles=imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             opmode.telemetry.addData("Heading",angles.firstAngle);
@@ -297,7 +297,6 @@ public class donkeybot {
         }
         stopDriving();
     }
-
 
 
 

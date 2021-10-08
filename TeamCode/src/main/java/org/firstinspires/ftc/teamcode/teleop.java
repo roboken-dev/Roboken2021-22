@@ -28,21 +28,9 @@ public class teleop extends LinearOpMode{
             robot.frontLeft.setPower(gamepad1.right_stick_y);
             robot.frontRight.setPower(gamepad1.left_stick_y);
             robot.rearRight.setPower(gamepad1.left_stick_y);
-/*
-           // Color.RGBToHSV(robot.sensorColor.red()*255, robot.sensorColor.green()*255,robot.sensorColor.blue()*255,hsvValues);
 
-                if (robot.sensorTouch.getState() == true) {
-                    telemetry.addData("Digital Touch", "Is Not Pressed");
-                 } else {
-                    telemetry.addData("Digital Touch", "Is Pressed");
-                }
-                telemetry.update();
+            robot.arm.setPower(gamepad2.right_stick_y*0.5);
 
-
-
-            telemetry.addData("hue",hsvValues[0]);
-            telemetry.update();
-*/
         }
 
 
