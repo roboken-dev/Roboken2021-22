@@ -53,6 +53,7 @@ public class donkeybot {
     static final double     DRIVE_SPEED             = 0.3;
 
     public CRServo arm;
+    public Servo claw;
 
    // public ColorSensor sensorColor;
     public DigitalChannel sensorTouch;
@@ -74,6 +75,7 @@ public class donkeybot {
         rearRight = hwMap.dcMotor.get("rearRight");
 
         arm = hwMap.crservo.get("arm");
+        claw = hwMap.servo.get("claw");
 
         //sensorColor = hwMap.get(ColorSensor.class,"colorSensor");
         sensorTouch = hwMap.get(DigitalChannel.class,"touchSensor");
