@@ -52,9 +52,9 @@ public class donkeybot {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.3;
 
-    public CRServo arm;
+    public DcMotor arm;
     public Servo claw;
-
+    public DcMotor spin;
    // public ColorSensor sensorColor;
     public DigitalChannel sensorTouch;
 
@@ -74,8 +74,9 @@ public class donkeybot {
         frontRight = hwMap.dcMotor.get("frontRight");
         rearRight = hwMap.dcMotor.get("rearRight");
 
-        arm = hwMap.crservo.get("arm");
+        arm = hwMap.dcMotor.get("arm");
         claw = hwMap.servo.get("claw");
+        spin = hwMap.dcMotor.get("spin");
 
         //sensorColor = hwMap.get(ColorSensor.class,"colorSensor");
         sensorTouch = hwMap.get(DigitalChannel.class,"touchSensor");
