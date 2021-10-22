@@ -31,7 +31,6 @@ public class teleop extends LinearOpMode{
             robot.frontRight.setPower(gamepad1.left_stick_y*SpeedControl);
             robot.rearRight.setPower(gamepad1.left_stick_y*SpeedControl);
 
-            robot.arm.setPower(gamepad2.right_stick_y*Math.abs(gamepad2.right_stick_y)*0.3);
             robot.spin.setPower(gamepad2.right_trigger);
             robot.spin.setPower(gamepad2.left_trigger*-1);
 
