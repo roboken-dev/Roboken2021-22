@@ -13,9 +13,9 @@ public class ParkInWarehouseBlue extends LinearOpMode {
 
             waitForStart();
 
-            robot.encoderDrive(0.6,36,36,10,this);
-            robot.turnLeftAngle(0.4,90,this);
-            robot.encoderDrive(1,50,50,20,this);
+            robot.encoderDrive(0.2,36,36,10,this);
+            robot.turnLeftAngle(0.2,90,this);
+            robot.encoderDrive(0.8,50,50,20,this);
 
 
 }}
