@@ -16,6 +16,7 @@ public class teleop extends LinearOpMode{
 
     float hsvValues[]={120F,300F,300F};
     double SpeedControl = 1.0;
+    double ArmSpeedControl = 0.3;
 
     public void runOpMode()
     {
@@ -30,6 +31,7 @@ public class teleop extends LinearOpMode{
             robot.frontLeft.setPower(gamepad1.right_stick_y*SpeedControl);
             robot.frontRight.setPower(gamepad1.left_stick_y*SpeedControl);
             robot.rearRight.setPower(gamepad1.left_stick_y*SpeedControl);
+            robot.arm.setPower(gamepad2.right_stick_y*Math.abs(gamepad2.right_stick_y)*ArmSpeedControl);
 
             robot.spin.setPower(gamepad2.right_trigger);
             robot.spin.setPower(gamepad2.left_trigger*-1);
@@ -45,6 +47,20 @@ public class teleop extends LinearOpMode{
             }
             if(gamepad1.dpad_down){
                 SpeedControl=0.3;
+            }
+
+
+            if(gamepad2.dpad_up) {
+                ArmSpeedControl=0.3;
+            }
+            if(gamepad2.dpad_right) {
+                ArmSpeedControl=0.2;
+            }
+            if(gamepad2.dpad_left) {
+                ArmSpeedControl=0.2;
+            }
+            if(gamepad2.dpad_down) {
+                ArmSpeedControl=0.1;
             }
 
 
